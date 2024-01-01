@@ -12,7 +12,7 @@ interface ObjectProperties {
 	upgradeCallback?: VoidFunction,
 	debugCallback?: VoidFunction,
 	customElement?: HTMLElement,
-	id: string,
+	id?: string,
 	forceGameVar?: boolean,
 	classes?: Array<string>,
 }
@@ -30,7 +30,9 @@ export class UIObject {
 				this.htmlElement = document.createElement('button');
 				this.htmlElement.textContent = <string>properties.staticText
 				if (properties.buttonCallback == undefined) {
-					throw new Error("button callback not found")
+					// throw new Error("button callback not found")
+					root.logger.warn('no button callback')
+					properties.buttonCallback = () => {}
 				}
 				this.htmlElement.onclick = properties.buttonCallback
 				break;
@@ -83,7 +85,7 @@ export class UIObject {
 			default:
 				throw new Error("invalid object type")
 		}
-		this.htmlElement.id = properties.id;
+		if (properties.id) this.htmlElement.id = properties.id;
 		if (properties.classes != undefined) {
 			properties.classes.forEach((v) => {
 				this.htmlElement.classList.add(v)
